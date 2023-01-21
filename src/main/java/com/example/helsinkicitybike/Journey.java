@@ -1,31 +1,37 @@
 package com.example.helsinkicitybike;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "journeys")
 public class Journey {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
 
     private Integer id = -1;
 
+    @Column(name = "departureTime")
     private String departureTime;
 
+    @Column(name = "returnTime")
     private String returnTime;
 
+    @Column(name = "departureStationId")
     private Integer departureStationId;
 
+    @Column(name = "departureStationName")
     private String departureStationName;
 
+    @Column(name = "returnStationId")
     private Integer returnStationId;
 
+    @Column(name = "returnStationName")
     private String returnStationName;
 
+    @Column(name = "distance")
     private Integer distance;
 
+    @Column(name = "duration")
     private Integer duration;
 
 

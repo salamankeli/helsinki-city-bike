@@ -1,14 +1,17 @@
 package com.example.helsinkicitybike;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping(path="/bike")
 public class JourneyController {
     @Autowired
     private JourneyRepository journeyRepository;
+
+    private final JourneyService journeyService;
 
     @PostMapping(path="/add") // Map ONLY POST Requests
     public @ResponseBody String addNewJourney (@RequestParam String departure_time
@@ -32,5 +35,14 @@ public class JourneyController {
     @GetMapping(path="/all")
     public @ResponseBody Iterable<Journey> getAllJourneys() {
         return journeyRepository.findAll();
+    }
+
+    public JourneyController(JourneyService journeyService) {
+        this.journeyService = journeyService;
+    }
+
+    @GetMapping("/journeys")
+    Page<Journey> getJourneys(Pageable pageable) {
+        return journeyService.getJourneys(pageable);
     }
 }
