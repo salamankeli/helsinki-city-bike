@@ -15,10 +15,14 @@ public class DBOperationRunner implements CommandLineRunner {
     @Autowired
     JourneyRepository jRepo;
 
+    @Autowired
+    StationRepository sRepo;
+
     String[] csvFiles = {"2021-05.csv", "2021-06.csv", "2021-07.csv"};
 
     @Override
     public void run(String... args) throws Exception {
+        List<Station> stationList = new ArrayList<>();
 
         List<Journey> journeyList = new ArrayList<>();
 
@@ -42,15 +46,19 @@ public class DBOperationRunner implements CommandLineRunner {
                                 departure_station_name, Integer.parseInt(return_station_id), return_station_name,
                                 Integer.parseInt(distance), Integer.parseInt(duration));
                         journeyList.add(journey);
+                        var departure_station = new Station(Integer.parseInt(departure_station_id), departure_station_name);
+                        var return_station = new Station(Integer.parseInt(return_station_id), return_station_name);
+                        stationList.add(departure_station);
+                        stationList.add(return_station);
+
                     }
                 } catch (Exception e) {
                 }
-
-
             }
         }
         System.out.println("Starting to save data");
         jRepo.saveAll(journeyList);
+        sRepo.saveAll(stationList);
         System.out.println("Saved csv data");
     }
 
