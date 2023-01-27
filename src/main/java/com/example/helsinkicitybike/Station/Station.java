@@ -1,4 +1,4 @@
-package com.example.helsinkicitybike;
+package com.example.helsinkicitybike.Station;
 
 import jakarta.persistence.*;
 

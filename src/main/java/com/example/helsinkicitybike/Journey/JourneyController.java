@@ -1,4 +1,4 @@
-package com.example.helsinkicitybike;
+package com.example.helsinkicitybike.Journey;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
