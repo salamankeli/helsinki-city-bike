@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <title>Journeys</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<table class="table" id="journeyTable">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Departure</th>
+        <th scope="col">Return</th>
+        <th scope="col">Departure station id</th>
+        <th scope="col">Departure station name</th>
+        <th scope="col">Return station id</th>
+        <th scope="col">Return station name</th>
+        <th scope="col">Covered distance (m)</th>
+        <th scope="col">Duration (sec.)</th>
+    </tr>
+    </thead>
+
+
+</table>
+<button onclick="getJourneys()">Get journeys</button>
+<script>
+    var defaultPage = 0;
+    var defaultSize = 10;
+    var defaultSortingField = "id";
+    var defaultSortingDirection = "ASC";
+    function getJourneys(page, size, sortingField, sortingDirection) {
+        if(page == null) {
+            page = defaultPage;
+        }
+        if(size == null) {
+            size = defaultSize;
+        }
+        if(sortingField == null) {
+            sortingField = defaultSortingField;
+        }
+        if(sortingDirection == null) {
+            sortingDirection = defaultSortingDirection;
+        }
+        $.get("http://localhost:8082/journeys/all?page="+page+"&size="+size+"&sortingField="+sortingField+"&sortingDirection="+sortingDirection, function(data, status){
+            console.log(status)
+            for(var i = 0; i < data.content.length; i++) {
+                insertNewRow(data.content[i].id, data.content[i].departureTime, data.content[i].returnTime,
+                    data.content[i].departureStationId, data.content[i].departureStationName, data.content[i].returnStationId,
+                    data.content[i].returnStationName,data.content[i].distance, data.content[i].duration);
+            }
+        });
+
+    }
+
+    function insertNewRow(journeyId, departureTime, returnTime, departureId, departureName, returnId, returnName, distance, duration) {
+        var newRow = document.getElementById("journeyTable").insertRow(-1);
+        var idCell = newRow.insertCell(0);
+        var departureTimeCell = newRow.insertCell(1);
+        var returnTimeCell = newRow.insertCell(2);
+        var departureIdCell = newRow.insertCell(3);
+        var departureNameCell = newRow.insertCell(4);
+        var returnIdCell = newRow.insertCell(5);
+        var returnNameCell = newRow.insertCell(6);
+        var distanceCell = newRow.insertCell(7);
+        var durationCell = newRow.insertCell(8);
+        idCell.innerHTML = journeyId;
+        departureTimeCell.innerHTML = departureTime;
+        returnTimeCell.innerHTML = returnTime;
+        departureIdCell.innerHTML = departureId;
+        departureNameCell.innerHTML = departureName;
+        returnIdCell.innerHTML = returnId;
+        returnNameCell.innerHTML = returnName;
+        distanceCell.innerHTML = distance;
+        durationCell.innerHTML = duration;
+    }
+</script>
+
+</body>
+</html>
