@@ -2,11 +2,10 @@ package com.example.helsinkicitybike.Station;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path="/station")
+@RequestMapping(path="/stations")
 public class StationController {
 
     @Autowired
@@ -28,14 +27,11 @@ public class StationController {
         return "Saved";
     }
 
-    @GetMapping(path="/all")
-    public @ResponseBody Iterable<Station> getAllStations() {
-        return stationRepository.findAll();
-    }
+    @GetMapping("/all")
+    public Page<Station> getStations(@RequestParam Integer page, @RequestParam Integer size,
+                                     @RequestParam String sortingField, @RequestParam String sortingDirection) {
+        return stationService.fetchStations(page, size, sortingField, sortingDirection);
 
-    @GetMapping("/all_stations")
-    Page<Station> getStations(Pageable pageable) {
-        return stationService.getStations(pageable);
     }
 
 
