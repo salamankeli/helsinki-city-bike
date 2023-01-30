@@ -10,27 +10,38 @@
 <table class="table" id="journeyTable">
     <thead>
     <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Departure</th>
-        <th scope="col">Return</th>
-        <th scope="col">Departure station id</th>
-        <th scope="col">Departure station name</th>
-        <th scope="col">Return station id</th>
-        <th scope="col">Return station name</th>
-        <th scope="col">Covered distance (m)</th>
-        <th scope="col">Duration (sec.)</th>
+        <th scope="col" onclick="sortTable(sortById)">Id</th>
+        <th scope="col" onclick="sortTable(sortByDepartureTime)">Departure</th>
+        <th scope="col" onclick="sortTable(sortByReturnTime)">Return</th>
+        <th scope="col" onclick="sortTable(sortByDepartureStationId)">Departure station id</th>
+        <th scope="col" onclick="sortTable(sortByDepartureStationName)">Departure station name</th>
+        <th scope="col" onclick="sortTable(sortByReturnStationId)">Return station id</th>
+        <th scope="col" onclick="sortTable(sortByReturnStationName)">Return station name</th>
+        <th scope="col" onclick="sortTable(sortByDistance)">Covered distance (km)</th>
+        <th scope="col" onclick="sortTable(sortByDuration)">Duration (min)</th>
     </tr>
     </thead>
+    <tbody id="journeyTableBody"></tbody>
 
 
 </table>
 <button onclick="getJourneys()">Get journeys</button>
+<input id="pageSizeInput" type="number" value="10" placeholder="Page size">
+<div id="pageable_div"></div>
 <script>
     var defaultPage = 0;
     var defaultSize = 10;
     var defaultSortingField = "id";
     var defaultSortingDirection = "ASC";
-    function getJourneys(page, size, sortingField, sortingDirection) {
+    var previousPage;
+    var nextPage;
+    var sortingDirection = "ASC";
+    var currentPage;
+    var sortById = "id", sortByDepartureTime = "departureTime", sortByReturnTime = "returnTime", sortByDepartureStationId = "departureStationId",
+        sortByDepartureStationName = "departureStationName", sortByReturnStationId = "returnStationId", sortByReturnStationName = "returnStationName",
+        sortByDistance = "distance", sortByDuration = "duration";
+    function getJourneys(page, sortingField, sortingDirection) {
+        var size = document.getElementById("pageSizeInput").value;
         if(page == null) {
             page = defaultPage;
         }
@@ -43,19 +54,23 @@
         if(sortingDirection == null) {
             sortingDirection = defaultSortingDirection;
         }
+        var table = document.getElementById("journeyTableBody");
+        table.innerHTML = "";
         $.get("http://localhost:8082/journeys/all?page="+page+"&size="+size+"&sortingField="+sortingField+"&sortingDirection="+sortingDirection, function(data, status){
             console.log(status)
             for(var i = 0; i < data.content.length; i++) {
                 insertNewRow(data.content[i].id, data.content[i].departureTime, data.content[i].returnTime,
                     data.content[i].departureStationId, data.content[i].departureStationName, data.content[i].returnStationId,
-                    data.content[i].returnStationName,data.content[i].distance, data.content[i].duration);
+                    data.content[i].returnStationName,(data.content[i].distance/1000).toFixed(2), (data.content[i].duration/60).toFixed(1));
             }
+            showPageable(data.pageable, data.totalElements, data.totalPages);
+            currentPage = data.number;
         });
 
     }
 
     function insertNewRow(journeyId, departureTime, returnTime, departureId, departureName, returnId, returnName, distance, duration) {
-        var newRow = document.getElementById("journeyTable").insertRow(-1);
+        var newRow = document.getElementById("journeyTableBody").insertRow(-1);
         var idCell = newRow.insertCell(0);
         var departureTimeCell = newRow.insertCell(1);
         var returnTimeCell = newRow.insertCell(2);
@@ -74,6 +89,30 @@
         returnNameCell.innerHTML = returnName;
         distanceCell.innerHTML = distance;
         durationCell.innerHTML = duration;
+    }
+
+    function showPageable(pageable, totalElements, totalPages) {
+        previousPage = pageable.pageNumber - 1;
+        if (previousPage < 0) {
+            previousPage = 0;
+        }
+        nextPage = pageable.pageNumber + 1;
+        if (nextPage > totalPages) {
+            nextPage = totalPages;
+        }
+        var pageableButtons = '<button onclick="getJourneys(\'' + previousPage + '\',\'' + defaultSortingField + '\',\'' + defaultSortingDirection + '\')">Previous</button>' +
+            '<button onclick="getJourneys(\'' + nextPage + '\',\'' + defaultSortingField + '\',\'' + defaultSortingDirection + '\')">Next</button>' +
+            '<br><span>' + pageable.offset + ' of ' + totalElements + ' elements</span>';
+        document.getElementById("pageable_div").innerHTML = pageableButtons;
+    }
+
+    function sortTable(field) {
+        if(sortingDirection === 'DESC') {
+            sortingDirection = 'ASC';
+        } else {
+            sortingDirection = 'DESC';
+        }
+        getJourneys(currentPage, field, sortingDirection);
     }
 </script>
 
