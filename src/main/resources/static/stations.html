@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <title>Stations</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<table class="table" id="stationTable">
+    <thead>
+    <tr>
+        <th scope="col" onclick="sortTable(sortById)">Id</th>
+        <th scope="col" onclick="sortTable(sortByDepartureTime)">Station name</th>
+    </tr>
+    </thead>
+    <tbody id="stationTableBody"></tbody>
+</table>
+<button onclick="getStations()">Get stations</button>
+<input id="pageSizeInput" type="number" value="10" placeholder="Page size">
+<div id="pageable_div"></div>
+<script>
+    var defaultPage = 0;
+    var defaultSize = 10;
+    var defaultSortingField = "stationId";
+    var defaultSortingDirection = "ASC";
+    var previousPage;
+    var nextPage;
+    var sortingDirection = "ASC";
+    var currentPage;
+    var sortById = "stationId", sortByDepartureTime = "stationName";
+    function getStations(page, sortingField, sortingDirection) {
+        var size = document.getElementById("pageSizeInput").value;
+        if(page == null) {
+            page = defaultPage;
+        }
+        if(size == null) {
+            size = defaultSize;
+        }
+        if(sortingField == null) {
+            sortingField = defaultSortingField;
+        }
+        if(sortingDirection == null) {
+            sortingDirection = defaultSortingDirection;
+        }
+        var table = document.getElementById("stationTableBody");
+        table.innerHTML = "";
+        $.get("http://localhost:8082/stations/all?page="+page+"&size="+size+"&sortingField="+sortingField+"&sortingDirection="+sortingDirection, function(data, status){
+            console.log(status)
+            for(var i = 0; i < data.content.length; i++) {
+                insertNewRow(data.content[i].stationId, data.content[i].stationName);
+            }
+            showPageable(data.pageable, data.totalElements, data.totalPages);
+            currentPage = data.number;
+        });
+    }
+
+    function showPageable(pageable, totalElements, totalPages) {
+        previousPage = pageable.pageNumber - 1;
+        if (previousPage < 0) {
+            previousPage = 0;
+        }
+        nextPage = pageable.pageNumber + 1;
+        if (nextPage > totalPages) {
+            nextPage = totalPages;
+        }
+        var pageableButtons = '<button onclick="getStations(\'' + previousPage + '\',\'' + defaultSortingField + '\',\'' + defaultSortingDirection + '\')">Previous</button>' +
+            '<button onclick="getStations(\'' + nextPage + '\',\'' + defaultSortingField + '\',\'' + defaultSortingDirection + '\')">Next</button>' +
+            '<br><span>' + pageable.offset + ' of ' + totalElements + ' elements</span>';
+        document.getElementById("pageable_div").innerHTML = pageableButtons;
+    }
+
+    function insertNewRow(stationId, stationName) {
+        var newRow = document.getElementById("stationTableBody").insertRow(-1);
+        var idCell = newRow.insertCell(0);
+        var nameCell = newRow.insertCell(1);
+        idCell.innerHTML = stationId;
+        nameCell.innerHTML = stationName;
+    }
+
+    function sortTable(field) {
+        if(sortingDirection === 'DESC') {
+            sortingDirection = 'ASC';
+        } else {
+            sortingDirection = 'DESC';
+        }
+        getStations(currentPage, field, sortingDirection);
+    }
+
+</script>
+</body>
+</html>
