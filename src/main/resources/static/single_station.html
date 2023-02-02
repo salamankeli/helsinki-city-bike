@@ -4,9 +4,41 @@
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <title>Single station</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body onload="getStation(stationId)">
-<!--<button onclick="getStation(stationId)">show station</button>-->
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="">Helsinki City Bike</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="http://localhost:8082/stations.html">Journeys</a></li>
+            <li><a href="http://localhost:8082/stations.html">Stations</a></li>
+        </ul>
+    </div>
+</nav>
+<table class="table table-hover" id="singleStationTable">
+    <thead>
+    <tr>
+        <td>Station Id</td>
+        <td id="stationIdCell"></td>
+    </tr>
+    <tr>
+        <td>Station name</td>
+        <td id="stationNameCell"></td>
+    </tr>
+    <tr>
+        <td>Departures</td>
+        <td id="departureCell"></td>
+    </tr>
+    <tr>
+        <td>Returns</td>
+        <td id="returnCell"></td>
+    </tr>
+</table>
 <div id="station_id_div"></div>
 <div id="station_name_div"></div>
 <div id="departure_div"></div>
@@ -20,10 +52,10 @@
         if(station == null) {
             station = defaultStationId;
         }
-        var idDiv = document.getElementById("station_id_div")
-        var nameDiv = document.getElementById("station_name_div")
-        var departureDiv = document.getElementById("departure_div")
-        var returnDiv = document.getElementById("return_div")
+        var idDiv = document.getElementById("stationIdCell")
+        var nameDiv = document.getElementById("stationNameCell")
+        var departureDiv = document.getElementById("departureCell")
+        var returnDiv = document.getElementById("returnCell")
         $.get("http://localhost:8082/stations/"+station, function(data, status){
             console.log(status)
             console.log(data)
@@ -33,12 +65,12 @@
         $.get("http://localhost:8082/journeys/departures/"+station, function(data, status){
             console.log(status)
             console.log(data)
-            departureDiv.innerHTML = "Departures: " + data;
+            departureDiv.innerHTML = data;
         });
         $.get("http://localhost:8082/journeys/returns/"+station, function(data, status){
             console.log(status)
             console.log(data)
-            returnDiv.innerHTML = "Returns: " + data;
+            returnDiv.innerHTML = data;
         });
         }
 

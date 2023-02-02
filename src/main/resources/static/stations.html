@@ -5,9 +5,22 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <title>Stations</title>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
-<body>
-<table class="table" id="stationTable">
+<body onload="getStations()">
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="">Helsinki City Bike</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="http://localhost:8082/">Journeys</a></li>
+            <li class="active"><a href="">Stations</a></li>
+        </ul>
+    </div>
+</nav>
+<table class="table table-hover" id="stationTable">
     <thead>
     <tr>
         <th scope="col" onclick="sortTable(sortById)">Id</th>
@@ -16,7 +29,7 @@
     </thead>
     <tbody id="stationTableBody"></tbody>
 </table>
-<button onclick="getStations()">Get stations</button>
+<button class="btn btn-secondary" onclick="getStations()">Reload stations</button>
 <input id="pageSizeInput" type="number" value="10" placeholder="Page size">
 <div id="pageable_div"></div>
 <script>
@@ -65,8 +78,8 @@
         if (nextPage > totalPages) {
             nextPage = totalPages;
         }
-        var pageableButtons = '<button onclick="getStations(\'' + previousPage + '\',\'' + defaultSortingField + '\',\'' + defaultSortingDirection + '\')">Previous</button>' +
-            '<button onclick="getStations(\'' + nextPage + '\',\'' + defaultSortingField + '\',\'' + defaultSortingDirection + '\')">Next</button>' +
+        var pageableButtons = '<button class="btn btn-primary" onclick="getStations(\'' + previousPage + '\',\'' + defaultSortingField + '\',\'' + defaultSortingDirection + '\')">Previous</button>' +
+            '<button class="btn btn-primary" onclick="getStations(\'' + nextPage + '\',\'' + defaultSortingField + '\',\'' + defaultSortingDirection + '\')">Next</button>' +
             '<br><span>' + pageable.offset + ' of ' + totalElements + ' elements</span>';
         document.getElementById("pageable_div").innerHTML = pageableButtons;
     }
