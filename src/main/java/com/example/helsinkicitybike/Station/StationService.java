@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class StationService {
     private final StationRepository stationRepository;
@@ -16,5 +18,8 @@ public class StationService {
         Sort sort = Sort.by(Sort.Direction.valueOf(sortingDirection), sortingField);
         Pageable pageable = PageRequest.of(page, pageSize, sort);
         return stationRepository.findAll(pageable);
+    }
+    public Optional<Station> getById(Integer stationId){
+        return stationRepository.findById(stationId);
     }
 }

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <title>Single station</title>
+</head>
+<body onload="getStation(stationId)">
+<!--<button onclick="getStation(stationId)">show station</button>-->
+<div id="station_id_div"></div>
+<div id="station_name_div"></div>
+<div id="departure_div"></div>
+<div id="return_div"></div>
+<script>
+
+    // window.onload = getStation(stationId);
+    var defaultStationId = 1;
+    var stationId = location.search.split("id=")[1];
+    function getStation(station) {
+        if(station == null) {
+            station = defaultStationId;
+        }
+        var idDiv = document.getElementById("station_id_div")
+        var nameDiv = document.getElementById("station_name_div")
+        var departureDiv = document.getElementById("departure_div")
+        var returnDiv = document.getElementById("return_div")
+        $.get("http://localhost:8082/stations/"+station, function(data, status){
+            console.log(status)
+            console.log(data)
+            idDiv.innerHTML = data.stationId;
+            nameDiv.innerHTML = data.stationName;
+        });
+        $.get("http://localhost:8082/journeys/departures/"+station, function(data, status){
+            console.log(status)
+            console.log(data)
+            departureDiv.innerHTML = "Departures: " + data;
+        });
+        $.get("http://localhost:8082/journeys/returns/"+station, function(data, status){
+            console.log(status)
+            console.log(data)
+            returnDiv.innerHTML = "Returns: " + data;
+        });
+        }
+
+</script>
+
+</body>
+</html>

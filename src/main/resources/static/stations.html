@@ -52,6 +52,7 @@
             }
             showPageable(data.pageable, data.totalElements, data.totalPages);
             currentPage = data.number;
+            addRowHandlers();
         });
     }
 
@@ -85,6 +86,22 @@
             sortingDirection = 'DESC';
         }
         getStations(currentPage, field, sortingDirection);
+    }
+
+    function addRowHandlers() {
+        var table = document.getElementById("stationTableBody");
+        var rows = table.getElementsByTagName("tr");
+        for (i = 0; i < rows.length; i++) {
+            var currentRow = table.rows[i];
+            var createClickHandler = function(row) {
+                return function () {
+                    var cell = row.getElementsByTagName("td")[0];
+                    var selected_cell = cell.innerHTML;
+                    window.location.href = "http://localhost:8082/single_station.html?id=" + selected_cell;
+                };
+            };
+            currentRow.onclick = createClickHandler(currentRow);
+        }
     }
 
 </script>

@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class JourneyService {
     private final JourneyRepository journeyRepository;
@@ -22,5 +24,12 @@ public class JourneyService {
         Sort sort = Sort.by(Sort.Direction.valueOf(sortingDirection), sortingField);
         Pageable pageable = PageRequest.of(page, pageSize, sort);
         return journeyRepository.findAll(pageable);
+    }
+    public Optional<Journey> getDepartureStationCount(Integer departureStationId) {
+        return journeyRepository.countByDepartureStationId(departureStationId);
+    }
+
+    public Optional<Journey> getReturnStationCount(Integer returnStationId) {
+        return journeyRepository.countByReturnStationId(returnStationId);
     }
 }

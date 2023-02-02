@@ -2,7 +2,11 @@ package com.example.helsinkicitybike.Station;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path="/stations")
@@ -32,6 +36,16 @@ public class StationController {
                                      @RequestParam String sortingField, @RequestParam String sortingDirection) {
         return stationService.fetchStations(page, size, sortingField, sortingDirection);
 
+    }
+
+    @GetMapping("/{stationId}")
+    public ResponseEntity<Station> getStation(@PathVariable(value =  "stationId") Integer stationId) {
+        Optional<Station> station = stationService.getById(stationId);
+        if (station.isPresent()) {
+            return new ResponseEntity<>(station.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 
