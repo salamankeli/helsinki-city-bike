@@ -21,20 +21,20 @@ http://localhost:8082/single_station.html?id=1
 Shows the station id, name, total number of journeys starting from the station, and total number of journeys ending at the station.
 
 ## Technology choices
-Java version 17 or newer
-MySQL (8.0.31)
-Spring boot
-Maven
-JavaScript
-html
-css
+* Java version 17 or newer
+* MySQL (8.0.31)
+* Spring boot
+* Maven
+* JavaScript
+* html
+* css
 
 ## Configurations
 Create a local MySQL database called "city_bike_db" with a username "citybikeuser" and password "ThePassword" or change 
-the the following settings from application.properties to match your configurations.
-#### spring.datasource.url=jdbc:mysql://localhost:3306/city_bike_db
-#### spring.datasource.username=citybikeuser
-#### spring.datasource.password=ThePassword
+the following settings from application.properties to match your configurations.
+* spring.datasource.url=jdbc:mysql://localhost:3306/city_bike_db
+* spring.datasource.username=citybikeuser
+* spring.datasource.password=ThePassword
 
 ## How to run the program.
 `.\mvnw spring-boot:run`
@@ -43,6 +43,11 @@ the the following settings from application.properties to match your configurati
 `.\mvnw test`
 
 ## Other comments
-DBOperationRunner.java imports data from the CSV files which takes a long time (approx 30min). If/when running the 
-application again comment all the code and the first line of the application.properties file (spring.jpa.hibernate.ddl-auto=create).
-This way the application will not overwrite the database every time it has been re-run.
+The test.csv files (test1.csv, test2.csv, test3.csv,) are smaller snippets of the original city bike csv files
+(2021-05.csv, 2021-06.csv, 2021-07.csv) since the original files are too large for git. These can be replaced with the
+original files but fix the file names accordingly in the main/java/DBOperationRunner file to the "csvFiles" list.  
+
+DBOperationRunner.java imports data from the CSV files which takes a long time when using the original csv files (approx 30min). 
+If/when running the application again comment all the code and the first line of the application.properties file 
+(spring.jpa.hibernate.ddl-auto=create). This way the application will not overwrite the database every time it has been re-run.
+
