@@ -1,5 +1,9 @@
 package com.example.helsinkicitybike;
 
+import com.example.helsinkicitybike.Journey.Journey;
+import com.example.helsinkicitybike.Journey.JourneyRepository;
+import com.example.helsinkicitybike.Station.Station;
+import com.example.helsinkicitybike.Station.StationRepository;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +22,7 @@ public class DBOperationRunner implements CommandLineRunner {
     @Autowired
     StationRepository sRepo;
 
-    String[] csvFiles = {"2021-05.csv", "2021-06.csv", "2021-07.csv"};
+    String[] csvFiles = {"test1.csv", "test2.csv", "test3.csv"};
 
     @Override
     public void run(String... args) throws Exception {
