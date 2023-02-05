@@ -11,6 +11,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.io.FileReader;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,10 @@ public class DBOperationRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        if (jRepo.count() > 0) {
+            System.out.println("Csv files are only saved into an empty database.");
+            return;
+        }
         List<Station> stationList = new ArrayList<>();
 
         List<Journey> journeyList = new ArrayList<>();
@@ -46,7 +51,7 @@ public class DBOperationRunner implements CommandLineRunner {
                 var duration = nextRecord[7];
                 try {
                     if (Integer.parseInt(distance) > 10 && Integer.parseInt(duration) > 10) {
-                        var journey = new Journey(departure, return_time, Integer.parseInt(departure_station_id),
+                        var journey = new Journey(LocalDateTime.parse(departure), return_time, Integer.parseInt(departure_station_id),
                                 departure_station_name, Integer.parseInt(return_station_id), return_station_name,
                                 Integer.parseInt(distance), Integer.parseInt(duration));
                         journeyList.add(journey);
