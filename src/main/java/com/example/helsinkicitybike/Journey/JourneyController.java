@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -16,8 +17,8 @@ public class JourneyController {
     private final JourneyService journeyService;
 
     @PostMapping(path="/add")
-    public @ResponseBody String addNewJourney (@RequestParam String departure_time
-            , @RequestParam String return_time, @RequestParam Integer departure_station_id
+    public @ResponseBody String addNewJourney (@RequestParam LocalDateTime departure_time
+            , @RequestParam LocalDateTime return_time, @RequestParam Integer departure_station_id
             , @RequestParam String departure_station_name, @RequestParam Integer return_station_id
             , @RequestParam String return_station_name, @RequestParam Integer distance
             , @RequestParam Integer duration) {

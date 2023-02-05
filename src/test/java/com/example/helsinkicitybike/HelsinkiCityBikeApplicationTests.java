@@ -8,11 +8,14 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+
+import java.time.LocalDateTime;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -30,13 +33,16 @@ class HelsinkiCityBikeApplicationTests {
     @Autowired
     JourneyRepository jRepo;
 
+    @MockBean
+    DBOperationRunner skipCsvLoad;
+
     @Autowired
     private MockMvc mvc;
 
     @Test
     void testAddingJourney() throws Exception {
 
-        var journey1 = new Journey("2021-05-31T23:57:25","2021-06-01T00:05:46",94,"Laajalahden aukio",100,"Teljäntie",2043,500);
+        var journey1 = new Journey(LocalDateTime.of(2021, 5, 31, 23, 57, 25), LocalDateTime.of(2021,6,1,0,5,46),94,"Laajalahden aukio",100,"Teljäntie",2043,500);
         jRepo.save(journey1);
         mvc.perform(get("/journeys/all?page=0&size=10&sortingField=departureStationId&sortingDirection=ASC")
                         .contentType(MediaType.APPLICATION_JSON))

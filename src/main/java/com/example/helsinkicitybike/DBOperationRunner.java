@@ -51,7 +51,7 @@ public class DBOperationRunner implements CommandLineRunner {
                 var duration = nextRecord[7];
                 try {
                     if (Integer.parseInt(distance) > 10 && Integer.parseInt(duration) > 10) {
-                        var journey = new Journey(LocalDateTime.parse(departure), return_time, Integer.parseInt(departure_station_id),
+                        var journey = new Journey(LocalDateTime.parse(departure), LocalDateTime.parse(return_time), Integer.parseInt(departure_station_id),
                                 departure_station_name, Integer.parseInt(return_station_id), return_station_name,
                                 Integer.parseInt(distance), Integer.parseInt(duration));
                         journeyList.add(journey);

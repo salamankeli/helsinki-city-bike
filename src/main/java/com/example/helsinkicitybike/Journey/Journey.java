@@ -2,6 +2,8 @@ package com.example.helsinkicitybike.Journey;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "journeys")
 public class Journey {
@@ -11,10 +13,10 @@ public class Journey {
     private Integer id = -1;
 
     @Column(name = "departureTime")
-    private String departureTime;
+    private LocalDateTime departureTime;
 
     @Column(name = "returnTime")
-    private String returnTime;
+    private LocalDateTime returnTime;
 
     @Column(name = "departureStationId")
     private Integer departureStationId;
@@ -38,7 +40,7 @@ public class Journey {
     public Journey() {
     }
 
-    public Journey(String departureTime, String returnTime, Integer departureStationId, String departureStationName,
+    public Journey(LocalDateTime departureTime, LocalDateTime returnTime, Integer departureStationId, String departureStationName,
                    Integer returnStationId, String returnStationName, Integer distance, Integer duration) {
         super();
         this.departureTime = departureTime;
@@ -59,19 +61,19 @@ public class Journey {
         this.id = id;
     }
 
-    public String getDepartureTime() {
+    public LocalDateTime getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(String departureTime) {
+    public void setDepartureTime(LocalDateTime departureTime) {
         this.departureTime = departureTime;
     }
 
-    public String getReturnTime() {
+    public LocalDateTime getReturnTime() {
         return returnTime;
     }
 
-    public void setReturnTime(String returnTime) {
+    public void setReturnTime(LocalDateTime returnTime) {
         this.returnTime = returnTime;
     }
 
