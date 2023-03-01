@@ -12,7 +12,7 @@
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="">Helsinki City Bike</a>
+            <a class="navbar-brand">Helsinki City Bike</a>
         </div>
         <ul class="nav navbar-nav">
             <li><a href="http://localhost:8082/">Journeys</a></li>
@@ -39,38 +39,27 @@
         <td id="returnCell"></td>
     </tr>
 </table>
-<div id="station_id_div"></div>
-<div id="station_name_div"></div>
-<div id="departure_div"></div>
-<div id="return_div"></div>
-<script>
 
-    // window.onload = getStation(stationId);
+<script>
     var defaultStationId = 1;
     var stationId = location.search.split("id=")[1];
     function getStation(station) {
         if(station == null) {
             station = defaultStationId;
         }
-        var idDiv = document.getElementById("stationIdCell")
-        var nameDiv = document.getElementById("stationNameCell")
-        var departureDiv = document.getElementById("departureCell")
-        var returnDiv = document.getElementById("returnCell")
-        $.get("http://localhost:8082/stations/"+station, function(data, status){
-            console.log(status)
-            console.log(data)
-            idDiv.innerHTML = data.stationId;
-            nameDiv.innerHTML = data.stationName;
+        var idCell = document.getElementById("stationIdCell")
+        var nameCell = document.getElementById("stationNameCell")
+        var departureCell = document.getElementById("departureCell")
+        var returnCell = document.getElementById("returnCell")
+        $.get("http://localhost:8082/stations/"+station, function(data){
+            idCell.innerHTML = data.stationId;
+            nameCell.innerHTML = data.stationName;
         });
-        $.get("http://localhost:8082/journeys/departures/"+station, function(data, status){
-            console.log(status)
-            console.log(data)
-            departureDiv.innerHTML = data;
+        $.get("http://localhost:8082/journeys/departures/"+station, function(data){
+            departureCell.innerHTML = data;
         });
-        $.get("http://localhost:8082/journeys/returns/"+station, function(data, status){
-            console.log(status)
-            console.log(data)
-            returnDiv.innerHTML = data;
+        $.get("http://localhost:8082/journeys/returns/"+station, function(data){
+            returnCell.innerHTML = data;
         });
         }
 

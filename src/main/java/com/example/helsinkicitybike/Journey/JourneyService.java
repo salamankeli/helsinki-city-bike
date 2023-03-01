@@ -16,10 +16,6 @@ public class JourneyService {
         this.journeyRepository = journeyRepository;
     }
 
-    public Page<Journey> getJourneys(Pageable pageable) {
-        return journeyRepository.findAllJourneys(pageable);
-    }
-
     public Page<Journey> fetchJourneys(Integer page, Integer pageSize, String sortingField, String sortingDirection) {
         Sort sort = Sort.by(Sort.Direction.valueOf(sortingDirection), sortingField);
         Pageable pageable = PageRequest.of(page, pageSize, sort);

@@ -42,13 +42,10 @@ the following settings from application.properties to match your configurations.
 ## How to run the tests
 `.\mvnw test`
 
-## Other comments
-DBOperationRunner.java imports data from the CSV files which takes a long time when using the original csv files (approx 30min).
-When re-running the application and you don't want to save the csv files to the database again, switch the settings 
-from the application.properties file from `spring.jpa.hibernate.ddl-auto=create` to `spring.jpa.hibernate.ddl-auto=none`  
-The test.csv files (test1.csv, test2.csv, test3.csv,) are smaller snippets of the original city bike csv files
-(2021-05.csv, 2021-06.csv, 2021-07.csv) since the original files are too large for git. These can be replaced with the
-original files but fix the file names accordingly in the main/java/DBOperationRunner file to the "csvFiles" list.  
+## TODO
+* Add searching for journeys and stations
+* Add test to CSV data import
+* Add logger
 
 
 

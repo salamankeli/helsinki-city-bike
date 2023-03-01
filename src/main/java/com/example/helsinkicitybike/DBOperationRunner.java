@@ -7,6 +7,7 @@ import com.example.helsinkicitybike.Station.StationRepository;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -17,14 +18,17 @@ import java.util.List;
 
 @Component
 public class DBOperationRunner implements CommandLineRunner {
+    // TODO: Optional/conditional data import run
     @Autowired
     JourneyRepository jRepo;
 
     @Autowired
     StationRepository sRepo;
 
-    String[] csvFiles = {"test1.csv", "test2.csv", "test3.csv"};
+    @Value("${csv-files}") // TODO: Only use single csv file for import?
+    String[] csvFiles;
 
+    // TODO: Add test cases for data import. With failing row, with already data skipping load etc
     @Override
     public void run(String... args) throws Exception {
         if (jRepo.count() > 0) {
@@ -32,36 +36,36 @@ public class DBOperationRunner implements CommandLineRunner {
             return;
         }
         List<Station> stationList = new ArrayList<>();
-
         List<Journey> journeyList = new ArrayList<>();
 
         for (String csvFile : csvFiles) {
-            FileReader filereader = new FileReader(csvFile);
-            CSVReader csvReader = new CSVReaderBuilder(filereader).withSkipLines(1).build();
+            FileReader fileReader = new FileReader(csvFile);
+            CSVReader csvReader = new CSVReaderBuilder(fileReader).withSkipLines(1).build();
             String[] nextRecord;
 
             while ((nextRecord = csvReader.readNext()) != null) {
                 var departure = nextRecord[0];
-                var return_time = nextRecord[1];
-                var departure_station_id = nextRecord[2];
-                var departure_station_name = nextRecord[3];
-                var return_station_id = nextRecord[4];
-                var return_station_name = nextRecord[5];
+                var returnTime = nextRecord[1];
+                var departureStationId = nextRecord[2];
+                var departureStationName = nextRecord[3];
+                var returnStationId = nextRecord[4];
+                var returnStationName = nextRecord[5];
                 var distance = nextRecord[6];
                 var duration = nextRecord[7];
                 try {
                     if (Integer.parseInt(distance) > 10 && Integer.parseInt(duration) > 10) {
-                        var journey = new Journey(LocalDateTime.parse(departure), LocalDateTime.parse(return_time), Integer.parseInt(departure_station_id),
-                                departure_station_name, Integer.parseInt(return_station_id), return_station_name,
+                        var journey = new Journey(LocalDateTime.parse(departure), LocalDateTime.parse(returnTime), Integer.parseInt(departureStationId),
+                                departureStationName, Integer.parseInt(returnStationId), returnStationName,
                                 Integer.parseInt(distance), Integer.parseInt(duration));
                         journeyList.add(journey);
-                        var departure_station = new Station(Integer.parseInt(departure_station_id), departure_station_name);
-                        var return_station = new Station(Integer.parseInt(return_station_id), return_station_name);
-                        stationList.add(departure_station);
-                        stationList.add(return_station);
+                        var departureStation = new Station(Integer.parseInt(departureStationId), departureStationName);
+                        var returnStation = new Station(Integer.parseInt(returnStationId), returnStationName);
+                        stationList.add(departureStation);
+                        stationList.add(returnStation);
 
                     }
                 } catch (Exception e) {
+                    //Invalid journey // TODO: Log / handle exception?
                 }
             }
         }

@@ -14,7 +14,7 @@
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="">Helsinki City Bike</a>
+            <a class="navbar-brand">Helsinki City Bike</a>
         </div>
         <ul class="nav navbar-nav">
             <li class="active"><a href="">Journeys</a></li>
@@ -41,19 +41,15 @@
 
 <button class="btn btn-secondary" onclick="getJourneys()">Reload journeys</button>
 <input id="pageSizeInput" type="number" value="10" placeholder="Page size">
-<div id="pageable_div"></div>
+<div id="pageableDiv"></div>
+
 <script>
-    var defaultPage = 0;
-    var defaultSize = 10;
-    var defaultSortingField = "id";
-    var defaultSortingDirection = "ASC";
-    var previousPage;
-    var nextPage;
-    var sortingDirection = "ASC";
-    var currentPage;
+    var defaultPage = 0, defaultSize = 10, defaultSortingField = "id", defaultSortingDirection = "ASC", sortingDirection = "ASC";
+    var previousPage, nextPage, currentPage;
     var sortById = "id", sortByDepartureTime = "departureTime", sortByReturnTime = "returnTime", sortByDepartureStationId = "departureStationId",
         sortByDepartureStationName = "departureStationName", sortByReturnStationId = "returnStationId", sortByReturnStationName = "returnStationName",
         sortByDistance = "distance", sortByDuration = "duration";
+
     function getJourneys(page, sortingField, sortingDirection) {
         var size = document.getElementById("pageSizeInput").value;
         if(page == null) {
@@ -70,8 +66,7 @@
         }
         var table = document.getElementById("journeyTableBody");
         table.innerHTML = "";
-        $.get("http://localhost:8082/journeys/all?page="+page+"&size="+size+"&sortingField="+sortingField+"&sortingDirection="+sortingDirection, function(data, status){
-            console.log(status)
+        $.get("http://localhost:8082/journeys/all?page="+page+"&size="+size+"&sortingField="+sortingField+"&sortingDirection="+sortingDirection, function(data){
             for(var i = 0; i < data.content.length; i++) {
                 insertNewRow(data.content[i].id, data.content[i].departureTime, data.content[i].returnTime,
                     data.content[i].departureStationId, data.content[i].departureStationName, data.content[i].returnStationId,
@@ -114,10 +109,14 @@
         if (nextPage > totalPages) {
             nextPage = totalPages;
         }
+        var numberOfResults = pageable.offset+parseInt(document.getElementById("pageSizeInput").value);
+        if (numberOfResults > totalElements) {
+            numberOfResults = totalElements;
+        }
         var pageableButtons = '<button class="btn btn-primary" onclick="getJourneys(\'' + previousPage + '\',\'' + defaultSortingField + '\',\'' + defaultSortingDirection + '\')">Previous</button>' +
             '<button class="btn btn-primary"  onclick="getJourneys(\'' + nextPage + '\',\'' + defaultSortingField + '\',\'' + defaultSortingDirection + '\')">Next</button>' +
-            '<br><span>' + pageable.offset + ' of ' + totalElements + ' elements</span>';
-        document.getElementById("pageable_div").innerHTML = pageableButtons;
+            '<br><span>' + numberOfResults + ' of ' + totalElements + ' elements</span>';
+        document.getElementById("pageableDiv").innerHTML = pageableButtons;
     }
 
     function sortTable(field) {
